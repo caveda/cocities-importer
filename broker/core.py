@@ -6,6 +6,7 @@ from xml.dom import minidom
 
 from broker.model import Line, LINE_FORWARD_DIRECTION
 from broker.parser_lines import parse_lines
+from broker.parser_stops import parse_stops
 
 """
     Returns the complete list of lines without stops or routes.
@@ -15,9 +16,18 @@ def get_all_lines():
     req = send_http_request(query)
     req.encoding = 'utf-8' # force utf-8 encoding to preserve special chars
     lines = parse_lines(req.text)
-    for l in lines:
-        print(l.json())
+    return lines
 
+
+"""
+    Returns the stops of the given line.
+"""
+def get_line_stops(line):
+    query = cocities.get_request_line_stops(line.id)
+    req = send_http_request(query)
+    req.encoding = 'utf-8' # force utf-8 encoding to preserve special chars
+    stops = parse_stops(req.text, line)
+    return stops
 
 
 """

@@ -7,7 +7,7 @@ import os
 class Query ():
     def __init__(self, uri_path, body = None, headers = None):
         self.uri = os.environ["SERVICE_HOST"] + uri_path
-        if headers is None:
+        if headers is not None:
             self.headers = headers
         if body is not None:
             self.body = body
@@ -51,16 +51,16 @@ def get_request_all_lines ():
 """
 REQUEST_BODY_LINE_STOPS_LIST = """<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/"> 
 <Body> <wsBilbao xmlns="https://www.bilbao.eus/ws_bilbao/">
-<servicio>BUSLISTLIN</servicio>
+<servicio>BUSLISTPAR</servicio>
 <usuario>USER</usuario>
 <parametros><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <PETICION><CODIGOLINEA>""" + TOKEN_LINE_ID + """</CODIGOLINEA></PETICION>]]></parametros>
 </wsBilbao></Body></Envelope>"""
 
 def get_request_line_stops (id):
-    return Query(URI_SERVICE_COCITIES,
-                 REQUEST_HEADER_COMMON + REQUEST_BODY_LINE_STOPS_LIST.replace(TOKEN_LINE_ID,id),
-                 {HEADER_SOAPACTION, os.environ["SERVICE_HOST"] + URI_SERVICE_SOAP})
+    return Query(URI_SERVICE_SOAP,
+                 REQUEST_BODY_LINE_STOPS_LIST.replace(TOKEN_LINE_ID,id),
+                 {HEADER_SOAPACTION : os.environ["SERVICE_HOST"] + URI_SERVICE_SOAP})
 
 
 """
