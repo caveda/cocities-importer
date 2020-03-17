@@ -18,9 +18,16 @@ def set_environment():
 """
 def main():
     set_environment()
+    lines = fetch_transport_data()
+    for l in lines:
+        print (l.json())
+
+
+def fetch_transport_data():
     lines = core.get_all_lines()
     for l in lines:
-        l.stops = core.get_line_stops (l)
+        l.set_stops(core.get_line_stops(l))
+    return lines
 
 
 if __name__ == "__main__":

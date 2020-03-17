@@ -6,15 +6,25 @@ LINE_RETURN_DIRECTION = 'BACKWARD'
 LINE_NAME_SEPARATOR = '-'
 
 """
-    Object representing a transport Line
+    Entity representing a transport Line
 """
 class Line ():
     def __init__(self, id, name, direction):
         self.id = id
         self.name = name
-        self.origin = self.name.split(LINE_NAME_SEPARATOR)[0].strip()
-        self.destination = self.name.split(LINE_NAME_SEPARATOR)[1].strip()
         self.direction = direction
+        if LINE_NAME_SEPARATOR in self.name:
+            self.origin = self.name.split(LINE_NAME_SEPARATOR)[0].strip()
+            self.destination = self.name.split(LINE_NAME_SEPARATOR)[1].strip()
+
+    # list of stops
+    stops = []
+
+    # origin name
+    origin = ''
+
+    # destination name
+    destination = ''
 
     def get_agency_direction(self):
         return "IDA" if self.direction==LINE_FORWARD_DIRECTION else "VLT"
@@ -28,8 +38,11 @@ class Line ():
     def get_line_request_unique_code (self):
         return self.id + self.get_agency_direction()
 
-    def json(self, pretty=False):
-        data = {'AgencyId': self.id, 'Name': self.name, 'Dir': self.direction}
+    def set_stops (self, stops):
+        self.stops = stops
+
+    def json(self, pretty=True):
+        data = {'AgencyId': self.id, 'Name': self.name, 'Dir': self.direction, 'Stops': [s.toJson(True) for s in self.stops]}
         return json.dumps(data, indent=(4 if pretty else None), ensure_ascii=False)
 
     def __unicode__(self):
@@ -37,14 +50,14 @@ class Line ():
 
 
 """
-    Object representing a Stop of a Line
+    Entity representing a Stop
 """
 class Stop ():
     def __init__(self, id, name):
         self.id = id
         self.name = name
 
-    def json(self, pretty=False):
+    def toJson(self, pretty=False):
         data = {'id': self.id, 'name': self.name }
         return json.dumps(data, indent=(4 if pretty else None))
 
