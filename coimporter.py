@@ -1,5 +1,6 @@
 import os
-from broker.core import get_all_lines
+
+from broker import core
 
 
 """
@@ -17,7 +18,10 @@ def set_environment():
 """
 def main():
     set_environment()
-    get_all_lines()
+    lines = core.get_all_lines()
+    for l in lines:
+        l.stops = core.get_line_stops (l)
+
 
 if __name__ == "__main__":
     main()
