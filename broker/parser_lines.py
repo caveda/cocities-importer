@@ -7,7 +7,6 @@ from broker.model import LINE_FORWARD_DIRECTION, Line
   Parse the response of all lines query
 """
 def parse_lines (xml_response):
-    print(xml_response)
     xmldoc = minidom.parseString(xml_response)
     lines_nodes = xmldoc.getElementsByTagName("ept:Line")
     result =[]

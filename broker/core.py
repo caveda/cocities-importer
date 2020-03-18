@@ -25,7 +25,6 @@ def get_all_lines():
 def get_line_stops(line):
     query = cocities.get_request_line_stops(line.id)
     req = send_http_request(query)
-    req.encoding = 'utf-8' # force utf-8 encoding to preserve special chars
     stops = parse_stops(req.text, line)
     return stops
 
