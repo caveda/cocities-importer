@@ -1,6 +1,7 @@
 
 from xml.dom import minidom
 from broker.model import LINE_FORWARD_DIRECTION, Line, Stop
+import re
 
 """
   Parse the response of all lines query
@@ -13,10 +14,19 @@ def parse_stops (xml_response, line):
     result =[]
     for s in stop_nodes:
         line_name = parse_stop_line_name(s)
-        if line.get_destination_name().lower() in line_name.lower():
+        if stop_belongs_line(line, line_name):
             stop = Stop(parse_stop_id(s), parse_stop_name(s))
             result.append(stop)
     return result
+
+
+def stop_belongs_line(line, stop_line_name):
+    if len(line.get_destination_name())>1:
+        #pattern = "^" + line.get_destination_name() + "?|semana(.+)\\("+line.get_destination_name()+"\\)"
+        pattern = f"^{line.get_destination_name()}?|(semana|laborables)(.+)\\({line.get_destination_name()}\\)"
+        return re.search(pattern, stop_line_name, re.IGNORECASE) is not None
+    else:
+        return True
 
 """
     Parse a stop node to get the stop ID
