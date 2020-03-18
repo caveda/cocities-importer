@@ -20,7 +20,7 @@ def main():
     set_environment()
     lines = fetch_transport_data()
     for l in lines:
-        print (l.json())
+        print (l.to_json())
 
 
 def fetch_transport_data():

@@ -14,8 +14,10 @@ class Line ():
         self.name = name
         self.direction = direction
         if LINE_NAME_SEPARATOR in self.name:
-            self.origin = self.name.split(LINE_NAME_SEPARATOR)[0].strip()
-            self.destination = self.name.split(LINE_NAME_SEPARATOR)[1].strip()
+            parts = self.name.split(LINE_NAME_SEPARATOR)
+            self.origin = parts[0].strip()
+            self.destination = parts[2].strip() if len(parts) == 3 \
+                else parts[1].strip()
 
     # list of stops
     stops = []
@@ -41,8 +43,8 @@ class Line ():
     def set_stops (self, stops):
         self.stops = stops
 
-    def json(self, pretty=True):
-        data = {'AgencyId': self.id, 'Name': self.name, 'Dir': self.direction, 'Stops': [s.toJson(True) for s in self.stops]}
+    def to_json(self, pretty=True):
+        data = {'AgencyId': self.id, 'Name': self.name, 'Dir': self.direction, 'Stops': [s.to_json(True) for s in self.stops]}
         return json.dumps(data, indent=(4 if pretty else None), ensure_ascii=False)
 
     def __unicode__(self):
@@ -57,9 +59,9 @@ class Stop ():
         self.id = id
         self.name = name
 
-    def toJson(self, pretty=False):
+    def to_json(self, pretty=False):
         data = {'id': self.id, 'name': self.name }
-        return json.dumps(data, indent=(4 if pretty else None))
+        return json.dumps(data, indent=(4 if pretty else None), ensure_ascii=False)
 
     def __unicode__(self):
         return self.id
