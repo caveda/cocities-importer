@@ -5,7 +5,7 @@ jobs:
   build:
     working_directory: ~/circleci-coimporter
     docker:
-      - image: circleci/python:3.6.4  # primary container for the build job
+      - image: circleci/python:3.6.4  # primary container
         environment:
           PIPENV_VENV_IN_PROJECT: true
     steps:
