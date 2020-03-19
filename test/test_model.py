@@ -12,7 +12,7 @@ class TestLine(unittest.TestCase):
         # When
         origin = l.get_origin_name()
         # Then
-        self.assertEqual(origin, "PLACE", "Origin is not correct")
+        self.assertEqual(origin, "PLACE1", "Origin is not correct")
 
     def test_destination_regularLineName(self):
         # Given
