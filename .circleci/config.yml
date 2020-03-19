@@ -1,4 +1,5 @@
-version: 2
+version: 2.1
+
 jobs:
   build:
     working_directory: ~/circleci-coimporter
@@ -8,17 +9,20 @@ jobs:
           PIPENV_VENV_IN_PROJECT: true
     steps:
       - checkout  # checkout source code to working directory
-      - run: sudo chown -R circleci:circleci /usr/local/bin
-      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
       - run:
+          command: sudo chown -R circleci:circleci /usr/local/bin
+      - run:
+          command: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
+      - run:
+          name: Install python dependencies
           command: |  # use pipenv to install dependencies
             sudo pip install pipenv
             pipenv install
       - run:
-        command: |
-          pipenv run python -m unittest discover
+          name: Run Unit Tests
+          command: pipenv run python -m unittest discover
       - store_test_results:
-          path: test-results
+            path: test-results
       - store_artifacts:
           path: test-results
           destination: tr1
