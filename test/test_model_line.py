@@ -22,6 +22,5 @@ class TestLine(unittest.TestCase):
         # Then
         self.assertEqual(dest, "PLACE2", "Destination is not correct")
 
-
 if __name__ == '__main__':
     unittest.main()
