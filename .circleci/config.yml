@@ -33,4 +33,4 @@ jobs:
           name: Coverage
           command: py.test --cov-report=xml --cov=broker test/
       - codecov/upload:
-          file: {{ coverage.xml }}
+          file: coverage.xml
