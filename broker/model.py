@@ -1,4 +1,6 @@
 import json
+import math
+
 from pyproj import Proj, transform
 
 LINE_FORWARD_DIRECTION = 'FORWARD'
@@ -97,4 +99,5 @@ class Location(object):
         return json.dumps(data, indent=(4 if pretty else None), ensure_ascii=False)
 
     def __eq__(self, other):
-        return self.lat == other.lat and self.long == other.long
+        return math.isclose(self.lat, other.lat, abs_tol=0.0000001) and \
+               math.isclose(self.long, other.long, abs_tol=0.0000001)
