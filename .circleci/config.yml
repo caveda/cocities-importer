@@ -21,6 +21,7 @@ jobs:
           name: Install python dependencies
           command: |  # use pipenv to install dependencies
             sudo pip install pipenv
+            pipenv install pyproj
             pipenv install
       - save_cache: # cache Python dependencies using checksum of Pipfile as the cache-key
           key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
