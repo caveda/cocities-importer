@@ -1,6 +1,7 @@
 from xml.dom import minidom
-from broker.model import LINE_FORWARD_DIRECTION, Line, Stop
+from broker.model import LINE_FORWARD_DIRECTION, Line, Stop, Location
 import re
+
 
 """
   Parse the response of all lines query
@@ -22,7 +23,8 @@ def parse_stops(xml_response, line):
 
 def add_stop_without_duplicates(added_stops, line, line_name, result, s, stop_id):
     if stop_id not in added_stops and stop_belongs_line(line, line_name):
-        stop = Stop(stop_id, parse_stop_name(s))
+        x,y = parse_stop_coordinates(s)
+        stop = Stop(stop_id, parse_stop_name(s), Location.from_coordinates(x, y))
         result.append(stop)
         added_stops.add(stop_id)
 
@@ -67,3 +69,12 @@ def extract_stops_document(xml_response):
     xmldoc = minidom.parseString(xml_response)
     doc_stops = xmldoc.getElementsByTagName("valores")
     return doc_stops[0].firstChild.data
+
+"""
+    Returns the latlong given the 
+"""
+def parse_stop_coordinates(s):
+    xlo_node = s.getElementsByTagName("GEOMETRY_XLO")
+    ylo_node = s.getElementsByTagName("GEOMETRY_YLO")
+    return xlo_node[0].firstChild.data, ylo_node[0].firstChild.data
+
