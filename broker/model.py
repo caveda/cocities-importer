@@ -47,6 +47,9 @@ class Line():
     def set_stops(self, stops):
         self.stops = stops
 
+    def __eq__(self, other):
+        return self.id == other.id and self.name == other.name
+
     def to_json(self, pretty=True):
         data = {'AgencyId': self.id, 'Name': self.name, 'Dir': self.direction,
                 'Stops': [s.to_json(True) for s in self.stops]}
@@ -54,6 +57,8 @@ class Line():
 
     def __unicode__(self):
         return self.id
+
+
 
 
 """
