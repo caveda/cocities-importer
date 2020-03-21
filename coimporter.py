@@ -7,28 +7,23 @@ from cobroker import core
 logger = logging.getLogger('coimporter')
 
 
-"""
-    Set environment variables
-"""
 def set_environment():
+    """ Set environment variables """
     with open('setupenv.sh') as f:
         processed = f.read().replace('export ', '')
     for line in processed.splitlines():
         var, _, value = line.partition('=')
-        os.environ[var] = value.replace('"','')
+        os.environ[var] = value.replace('"', '')
 
-"""
-    Initialize the logging mechanism
-"""
+
 def init_logging():
+    """ Initialize the logging mechanism """
     logger.setLevel(logging.INFO)
     return logger
 
-"""
-    By means of cobroker library, gathers the transport
-    information.
-"""
+
 def fetch_transport_data():
+    """ By means of cobroker library, gathers the transport information. """
     logger.info("Fetching lines list...")
     lines = core.get_all_lines()
     logger.info(f"{len(lines)} lines.")
@@ -40,15 +35,14 @@ def fetch_transport_data():
     logger.info(f"All information collected.")
     return lines
 
-"""
-    Main function
-"""
+
 def main():
+    """ Main function """
     init_logging()
     set_environment()
     lines = fetch_transport_data()
     for l in lines:
-        print (l.to_json())
+        print(l.to_json())
 
 
 if __name__ == "__main__":

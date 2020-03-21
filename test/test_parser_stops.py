@@ -31,6 +31,8 @@ TEST_XML_RESPONSE = """<valores xmlns=""><![CDATA[<?xml version="1.0" encoding="
 
 
 class TestParserStops(unittest.TestCase):
+    """ Test suite of parser_stops """
+
     def test_parse_stops_validXML_stopsReturnedExpected(self):
         # Given
         input_xml = TEST_XML_RESPONSE

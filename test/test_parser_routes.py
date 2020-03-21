@@ -34,6 +34,8 @@ TEST_JSON_RESPONSE = """{
 
 
 class TestParserRoutes(unittest.TestCase):
+    """ Test suite of parser_routes """
+
     def test_parse_routes_validJSON_returnedExpectedRoute(self):
         # Given
         input_json = TEST_JSON_RESPONSE

@@ -11,10 +11,12 @@ from cobroker.parser_stops import parse_stops
 """
     Returns the complete list of lines without stops or routes.
 """
+
+
 def get_all_lines():
     query = cocities.get_request_all_lines()
     req = send_http_request(query)
-    req.encoding = 'utf-8' # force utf-8 encoding to preserve special chars
+    req.encoding = 'utf-8'  # force utf-8 encoding to preserve special chars
     lines = parse_lines(req.text)
     return lines
 
@@ -22,6 +24,8 @@ def get_all_lines():
 """
     Returns the stops of the given line.
 """
+
+
 def get_line_stops(line):
     query = cocities.get_request_line_stops(line.id)
     req = send_http_request(query)
@@ -29,23 +33,18 @@ def get_line_stops(line):
     return stops
 
 
-"""
-    Returns the complete list of lines without stops or routes.
-"""
 def get_line_route(line):
+    """ Returns the complete list of lines without stops or routes. """
     query = cocities.get_request_line_route_map()
     req = send_http_request(query)
-    req.encoding = 'utf-8' # force utf-8 encoding to preserve special chars
+    req.encoding = 'utf-8'  # force utf-8 encoding to preserve special chars
     route = parse_route(req.text)
     return route
 
-"""
-    Build a request out of the passed query. 
-"""
-def send_http_request (query):
+
+def send_http_request(query):
+    """ Build a request out of the passed query. """
     return requests.request(query.method,
-                            url = query.uri,
-                            headers = query.headers,
-                            data = query.body)
-
-
+                            url=query.uri,
+                            headers=query.headers,
+                            data=query.body)

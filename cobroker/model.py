@@ -7,12 +7,10 @@ LINE_FORWARD_DIRECTION = 'FORWARD'
 LINE_RETURN_DIRECTION = 'BACKWARD'
 LINE_NAME_SEPARATOR = '-'
 
-"""
-    Entity representing a transport Line
-"""
-
 
 class Line():
+    """ Entity representing a transport Line """
+
     def __init__(self, id, name, direction):
         self.id = id
         self.name = name
@@ -65,14 +63,9 @@ class Line():
         return self.id
 
 
-
-
-"""
-    Entity representing a Stop
-"""
-
-
 class Stop():
+    """ Entity representing a Stop """
+
     def __init__(self, id, name, location):
         self.id = id
         self.name = name
@@ -88,12 +81,10 @@ class Stop():
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name and self.location == other.location
 
-"""
-    Entity representing a location expressed in latitude and longitude.
-"""
-
 
 class Location(object):
+    """ Entity representing a location expressed in latitude and longitude."""
+
     def __init__(self, lat, long):
         self.lat = lat
         self.long = long

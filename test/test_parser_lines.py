@@ -99,8 +99,8 @@ TEST_XML_RESPONSE = """<Collection xsi:schemaLocation="http://namespace.emotion-
       </Collection>"""
 
 
-
 class TestParserLines(unittest.TestCase):
+    """ Test suite of parser_lines """
     def test_parse_lines_validXML_linesReturnedExpected(self):
         # Given
         input_xml = TEST_XML_RESPONSE
