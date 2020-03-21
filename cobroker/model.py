@@ -23,7 +23,7 @@ class Line():
             self.destination = parts[2].strip() if len(parts) == 3 \
                 else parts[1].strip()
 
-    # list of stops
+    # Array of stops
     stops = []
 
     # origin name
@@ -31,6 +31,9 @@ class Line():
 
     # destination name
     destination = ''
+
+    # route expressed as a array of Locations
+    route = []
 
     def get_agency_direction(self):
         return "IDA" if self.direction == LINE_FORWARD_DIRECTION else "VLT"
@@ -47,12 +50,15 @@ class Line():
     def set_stops(self, stops):
         self.stops = stops
 
+    def set_route(self, route):
+        self.route = route
+
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name
 
     def to_json(self, pretty=True):
         data = {'AgencyId': self.id, 'Name': self.name, 'Dir': self.direction,
-                'Stops': [s.to_json(True) for s in self.stops]}
+                'Stops': [s.to_json(True) for s in self.stops], 'Map': [l.to_json(True) for l in self.route]}
         return json.dumps(data, indent=(4 if pretty else None), ensure_ascii=False)
 
     def __unicode__(self):

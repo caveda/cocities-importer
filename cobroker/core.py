@@ -30,6 +30,16 @@ def get_line_stops(line):
 
 
 """
+    Returns the complete list of lines without stops or routes.
+"""
+def get_line_route(line):
+    query = cocities.get_request_line_route_map()
+    req = send_http_request(query)
+    req.encoding = 'utf-8' # force utf-8 encoding to preserve special chars
+    route = parse_route(req.text)
+    return route
+
+"""
     Build a request out of the passed query. 
 """
 def send_http_request (query):
