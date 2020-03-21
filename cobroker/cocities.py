@@ -1,11 +1,10 @@
 import os
 
 
-"""
- Entity representing a request
-"""
-class Query ():
-    def __init__(self, uri_path, body = None, headers = None):
+class Query():
+    """ Entity representing a request """
+
+    def __init__(self, uri_path, body=None, headers=None):
         self.uri = os.environ["SERVICE_HOST"] + uri_path
         if headers is not None:
             self.headers = headers
@@ -33,22 +32,17 @@ REQUEST_HEADER_COMMON = """<wfs:GetFeature xmlns:xsi="http://www.w3.org/2001/XML
       xmlns:ept="http://namespace.emotion-project.eu/version/Final2.1.0/pubtrans"
       xmlns:ogc="http://www.opengis.net/ogc" service="WFS" version="1.1.0">"""
 
-
-"""
-    All lines
-"""
+""" All lines """
 REQUEST_BODY_ALL_LINES = """<wfs:Query typeName="ept:Line">
     </wfs:Query>
     </wfs:GetFeature>"""
 
-def get_request_all_lines ():
+
+def get_request_all_lines():
     return Query(URI_SERVICE_COCITIES, REQUEST_HEADER_COMMON + REQUEST_BODY_ALL_LINES)
 
 
-
-"""
-    Stops of a line
-"""
+""" Stops of a line """
 REQUEST_BODY_LINE_STOPS_LIST = """<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/"> 
 <Body> <wsBilbao xmlns="https://www.bilbao.eus/ws_bilbao/">
 <servicio>BUSLISTPAR</servicio>
@@ -57,26 +51,24 @@ REQUEST_BODY_LINE_STOPS_LIST = """<Envelope xmlns="http://schemas.xmlsoap.org/so
 <PETICION><CODIGOLINEA>""" + TOKEN_LINE_ID + """</CODIGOLINEA></PETICION>]]></parametros>
 </wsBilbao></Body></Envelope>"""
 
-def get_request_line_stops (id):
+
+def get_request_line_stops(id):
     return Query(URI_SERVICE_SOAP,
-                 REQUEST_BODY_LINE_STOPS_LIST.replace(TOKEN_LINE_ID,id),
-                 {HEADER_SOAPACTION : os.environ["SERVICE_HOST"] + URI_SERVICE_SOAP})
+                 REQUEST_BODY_LINE_STOPS_LIST.replace(TOKEN_LINE_ID, id),
+                 {HEADER_SOAPACTION: os.environ["SERVICE_HOST"] + URI_SERVICE_SOAP})
 
 
-"""
-    Extended information on line stops
-"""
-REQUEST_PARAMS_LINE_STOPS_INFO='&idservice=parada""" + TOKEN_LINE_CODE + """&json'
+""" Extended information on line stops """
+REQUEST_PARAMS_LINE_STOPS_INFO = f'&idservice=parada{TOKEN_LINE_CODE}&json'
 
-def get_request_line_stops_info (code):
+
+def get_request_line_stops_info(code):
     return Query(URI_SERVICE_GS + REQUEST_PARAMS_LINE_STOPS_INFO.replace(TOKEN_LINE_CODE, code))
 
 
-"""
-    GPS route of a line
-"""
-REQUEST_PARAMS_LINE_ROUTE_MAP ='&idservice=ruta""" + TOKEN_LINE_CODE + """&json'
+""" GPS route of a line """
+REQUEST_PARAMS_LINE_ROUTE_MAP = f'&idservice=ruta{TOKEN_LINE_CODE}&json'
 
-def get_request_line_route_map (code):
+
+def get_request_line_route_map(code):
     return Query(URI_SERVICE_GS + REQUEST_PARAMS_LINE_ROUTE_MAP.replace(TOKEN_LINE_CODE, code))
-

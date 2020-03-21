@@ -1,14 +1,10 @@
 from xml.dom import minidom
-from broker.model import LINE_FORWARD_DIRECTION, Line, Stop, Location
+from cobroker.model import Stop, Location
 import re
 
 
-"""
-  Parse the response of all lines query
-"""
-
-
 def parse_stops(xml_response, line):
+    """ Parse the response of all lines query """
     xml_stops = extract_stops_document(xml_response)
     xmldoc = minidom.parseString(xml_stops)
     stop_nodes = xmldoc.getElementsByTagName("DETALLE")
@@ -23,7 +19,7 @@ def parse_stops(xml_response, line):
 
 def add_stop_without_duplicates(added_stops, line, line_name, result, s, stop_id):
     if stop_id not in added_stops and stop_belongs_line(line, line_name):
-        x,y = parse_stop_coordinates(s)
+        x, y = parse_stop_coordinates(s)
         stop = Stop(stop_id, parse_stop_name(s), Location.from_coordinates(x, y))
         result.append(stop)
         added_stops.add(stop_id)
@@ -38,43 +34,33 @@ def stop_belongs_line(line, stop_line_name):
         return True
 
 
-"""
-    Parse a stop node to get the stop ID
-"""
 def parse_stop_id(s):
+    """ Parse a stop node to get the stop ID """
     id_node = s.getElementsByTagName("PARADAAUTOBUS")
     return id_node[0].firstChild.data
 
 
-"""
-    Parse the stop node to get the name of the stop
-"""
 def parse_stop_name(s):
+    """ Parse the stop node to get the name of the stop """
     name_node = s.getElementsByTagName("NOMBREPARADA")
     return name_node[0].firstChild.data
 
-"""
-    Parse the line name of the stop. Used for filtering 
-    non-relevant nodes.
-"""
+
 def parse_stop_line_name(s):
+    """ Parse the line name of the stop. Used for filtering non-relevant nodes. """
     name_node = s.getElementsByTagName("NOMBRE")
     return name_node[0].firstChild.data
 
 
-"""
-    Extract the stops document from the response
-"""
 def extract_stops_document(xml_response):
+    """ Extract the stops document from the response """
     xmldoc = minidom.parseString(xml_response)
     doc_stops = xmldoc.getElementsByTagName("valores")
     return doc_stops[0].firstChild.data
 
-"""
-    Returns the latlong given the 
-"""
+
 def parse_stop_coordinates(s):
+    """ Parses the coordinates of the stop """
     xlo_node = s.getElementsByTagName("GEOMETRY_XLO")
     ylo_node = s.getElementsByTagName("GEOMETRY_YLO")
     return xlo_node[0].firstChild.data, ylo_node[0].firstChild.data
-
