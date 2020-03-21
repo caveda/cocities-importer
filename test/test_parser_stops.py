@@ -1,7 +1,7 @@
 import unittest
 
-from broker.model import Location, Stop, Line, LINE_FORWARD_DIRECTION
-from broker.parser_stops import parse_stops
+from cobroker.model import Location, Stop, Line, LINE_FORWARD_DIRECTION
+from cobroker.parser_stops import parse_stops
 
 TEST_XML_RESPONSE = """<valores xmlns=""><![CDATA[<?xml version="1.0" encoding="UTF-8"?><data><other>Generic data</other><list>
        <DETALLE>
@@ -29,9 +29,7 @@ TEST_XML_RESPONSE = """<valores xmlns=""><![CDATA[<?xml version="1.0" encoding="
             <GEOMETRY_YLO>4790445.69997587</GEOMETRY_YLO>
         </DETALLE></list></data>]]></valores>"""
 
-"""
-    Test suite of Stop class
-"""
+
 class TestParserStops(unittest.TestCase):
     def test_parse_stops_validXML_stopsReturnedExpected(self):
         # Given

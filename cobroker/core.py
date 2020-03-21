@@ -1,12 +1,12 @@
 import requests
-import broker.cocities
-from broker import cocities
+import cobroker.cocities
+from cobroker import cocities
 import re
 from xml.dom import minidom
 
-from broker.model import Line, LINE_FORWARD_DIRECTION
-from broker.parser_lines import parse_lines
-from broker.parser_stops import parse_stops
+from cobroker.model import Line, LINE_FORWARD_DIRECTION
+from cobroker.parser_lines import parse_lines
+from cobroker.parser_stops import parse_stops
 
 """
     Returns the complete list of lines without stops or routes.

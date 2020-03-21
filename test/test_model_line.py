@@ -1,6 +1,6 @@
 import unittest
 
-from broker.model import Line, LINE_FORWARD_DIRECTION
+from cobroker.model import Line, LINE_FORWARD_DIRECTION
 
 """
     Test suite of Line class

@@ -1,6 +1,6 @@
 import unittest
 
-from broker.model import Location, Stop
+from cobroker.model import Location, Stop
 
 """
     Test suite of Stop class

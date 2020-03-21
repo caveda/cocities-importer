@@ -1,6 +1,6 @@
 
 from xml.dom import minidom
-from broker.model import LINE_FORWARD_DIRECTION, Line
+from cobroker.model import LINE_FORWARD_DIRECTION, Line
 
 
 """

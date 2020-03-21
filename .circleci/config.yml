@@ -33,6 +33,6 @@ jobs:
           command: pipenv run python -m unittest discover
       - run:
           name: Coverage
-          command: pipenv run py.test --cov-report=xml --cov=broker test/
+          command: pipenv run py.test --cov-report=xml --cov=cobroker test/
       - codecov/upload:
           file: coverage.xml

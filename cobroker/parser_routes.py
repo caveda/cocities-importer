@@ -1,14 +1,14 @@
 import json
 
+from cobroker.model import Location
 
-"""
-  Parse json response containing the route of the line
-"""
-def parse_route (response):
-    parsed_json = json.loads(response)
-    result =[]
-    for l in lines_nodes:
-        line = Line(parse_line_id(l), parse_line_name(l), LINE_FORWARD_DIRECTION)
-        result.append(line)
+
+def parse_route(response):
+    """ Parse json response containing the route of the line """
+    data = json.loads(response)
+    coordinates = data["features"][0]["geometry"]["coordinates"][0]
+    result = []
+    for c in coordinates:
+        result.append(Location.from_coordinates(c[0], c[1]))
     return result
 

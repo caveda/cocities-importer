@@ -1,12 +1,11 @@
 from xml.dom import minidom
-from broker.model import LINE_FORWARD_DIRECTION, Line, Stop, Location
+from cobroker.model import LINE_FORWARD_DIRECTION, Line, Stop, Location
 import re
 
 
 """
   Parse the response of all lines query
 """
-
 
 def parse_stops(xml_response, line):
     xml_stops = extract_stops_document(xml_response)

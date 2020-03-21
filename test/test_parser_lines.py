@@ -1,7 +1,7 @@
 import unittest
 
-from broker.model import Line, LINE_FORWARD_DIRECTION
-from broker.parser_lines import parse_lines
+from cobroker.model import Line, LINE_FORWARD_DIRECTION
+from cobroker.parser_lines import parse_lines
 
 TEST_XML_RESPONSE = """<Collection xsi:schemaLocation="http://namespace.emotion-project.eu/version/Final2.1.0/pubtrans https://www.blabla.eus/wfsCocities/schemas/CoCities-Data-GML-Final2.2.0/eMotion/eMotionVersionFinal2.1.0-PublicTransport.xsd http://www.opengis.net/wfs https://www.blabla.com/wfsCocities/schemas/wfs/1.1.0/wfs.xsd" xmlns:wfs="http://www.opengis.net/wfs" xmlns:edi="http://namespace.emotion-project.eu/version/Final2.1.0/dir" xmlns:ogc="http://www.opengis.net/ogc" xmlns:eti="http://namespace.emotion-project.eu/version/Final2.1.0/trinfo" xmlns:elr="http://namespace.emotion-project.eu/version/Final2.1.0/locref" xmlns:ect="http://namespace.emotion-project.eu/version/Final2.1.0/ctypes" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:enw="http://namespace.emotion-project.eu/version/Final2.1.0/net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bnw="http://co-cities.bilbokoudala.net/version/2.2.0/net" xmlns:ept="http://namespace.emotion-project.eu/version/Final2.1.0/pubtrans" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink">  
     <ept:Line gml:id="1001">
@@ -98,9 +98,6 @@ TEST_XML_RESPONSE = """<Collection xsi:schemaLocation="http://namespace.emotion-
       </ept:Line>
       </Collection>"""
 
-"""
-    Test suite of Stop class
-"""
 
 
 class TestParserLines(unittest.TestCase):
