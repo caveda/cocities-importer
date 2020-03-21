@@ -59,7 +59,7 @@ def get_request_line_stops(id):
 
 
 """ Extended information on line stops """
-REQUEST_PARAMS_LINE_STOPS_INFO = '&idservice=parada""" + TOKEN_LINE_CODE + """&json'
+REQUEST_PARAMS_LINE_STOPS_INFO = f'&idservice=parada{TOKEN_LINE_CODE}&json'
 
 
 def get_request_line_stops_info(code):
@@ -67,7 +67,7 @@ def get_request_line_stops_info(code):
 
 
 """ GPS route of a line """
-REQUEST_PARAMS_LINE_ROUTE_MAP = '&idservice=ruta""" + TOKEN_LINE_CODE + """&json'
+REQUEST_PARAMS_LINE_ROUTE_MAP = f'&idservice=ruta{TOKEN_LINE_CODE}&json'
 
 
 def get_request_line_route_map(code):

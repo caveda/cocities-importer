@@ -6,6 +6,7 @@ from xml.dom import minidom
 
 from cobroker.model import Line, LINE_FORWARD_DIRECTION
 from cobroker.parser_lines import parse_lines
+from cobroker.parser_routes import parse_route
 from cobroker.parser_stops import parse_stops
 
 """
@@ -35,9 +36,8 @@ def get_line_stops(line):
 
 def get_line_route(line):
     """ Returns the complete list of lines without stops or routes. """
-    query = cocities.get_request_line_route_map()
+    query = cocities.get_request_line_route_map(line.get_line_request_unique_code())
     req = send_http_request(query)
-    req.encoding = 'utf-8'  # force utf-8 encoding to preserve special chars
     route = parse_route(req.text)
     return route
 

@@ -18,21 +18,28 @@ def set_environment():
 
 def init_logging():
     """ Initialize the logging mechanism """
-    logger.setLevel(logging.INFO)
+    logging.basicConfig(filename='coimporter.log',
+                        level=logging.INFO,
+                        format='%(asctime)s %(levelname)-8s %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
     return logger
+
+
+def log(msg):
+    logging.info(msg)
 
 
 def fetch_transport_data():
     """ By means of cobroker library, gathers the transport information. """
-    logger.info("Fetching lines list...")
+    log("Fetching lines list...")
     lines = core.get_all_lines()
-    logger.info(f"{len(lines)} lines.")
+    log(f"{len(lines)} lines.")
     for l in lines:
-        logger.info(f"Collecting stops of line {l.id}")
+        log(f"Collecting stops of line {l.id}")
         l.set_stops(core.get_line_stops(l))
-        logger.info(f"Reading route of line {l.id}")
+        log(f"Reading route of line {l.id}")
         l.set_route(core.get_line_route(l))
-    logger.info(f"All information collected.")
+    log(f"All information collected.")
     return lines
 
 
