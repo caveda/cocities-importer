@@ -1,3 +1,4 @@
+import json
 import os
 import logging
 
@@ -34,7 +35,8 @@ def fetch_transport_data():
     log("Fetching lines list...")
     lines = core.get_all_lines()
     log(f"{len(lines)} lines.")
-    for l in lines:
+    for i in range(len(lines)):
+        l = lines[i]
         log(f"Collecting stops of line {l.get_line_request_unique_code()}")
         l.set_stops(core.get_line_stops(l))
         log(f"Reading route of line {l.get_line_request_unique_code()}")
@@ -43,13 +45,17 @@ def fetch_transport_data():
     return lines
 
 
+def write_output_file(lines):
+    with open('alllines.json', 'w', encoding='utf-8') as f:
+        json.dump([l.to_json(False) for l in lines], f, ensure_ascii=False, indent=4)
+
+
 def main():
     """ Main function """
     init_logging()
     set_environment()
     lines = fetch_transport_data()
-    for l in lines:
-        print(l.to_json())
+    write_output_file(lines)
 
 
 if __name__ == "__main__":

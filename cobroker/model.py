@@ -70,9 +70,9 @@ class Line():
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name
 
-    def to_json(self, pretty=True):
+    def to_json(self, pretty=False):
         data = {'AgencyId': self.id, 'Name': self.name, 'Dir': self.direction,
-                'Stops': [s.to_json(True) for s in self.stops], 'Map': [l.to_json(True) for l in self.route]}
+                'Stops': [s.to_json(False) for s in self.stops], 'Map': [l.to_json(False) for l in self.route]}
         return json.dumps(data, indent=(4 if pretty else None), ensure_ascii=False)
 
     def __unicode__(self):
