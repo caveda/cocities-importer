@@ -135,6 +135,7 @@ dmypy.json
 .DS_Store
 *.xml
 *.sh
+*.json
 
 # pipEnv
 Pipfile

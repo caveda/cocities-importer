@@ -40,6 +40,18 @@ class Line():
     def get_agency_direction(self):
         return "IDA" if self.direction == LINE_FORWARD_DIRECTION else "VLT"
 
+    def get_reverse_name(self):
+        result = self.name
+        if LINE_NAME_SEPARATOR in self.name:
+            parts = self.name.split(LINE_NAME_SEPARATOR)
+            name = ''
+            for i in range(len(parts)):
+                name += parts[(len(parts)-1)-i].strip()
+                if i < (len(parts) - 1):
+                    name += " - "
+            result = name.strip()
+        return result
+
     def get_origin_name(self):
         return self.origin
 
@@ -58,9 +70,9 @@ class Line():
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name
 
-    def to_json(self, pretty=True):
+    def to_json(self, pretty=False):
         data = {'AgencyId': self.id, 'Name': self.name, 'Dir': self.direction,
-                'Stops': [s.to_json(True) for s in self.stops], 'Map': [l.to_json(True) for l in self.route]}
+                'Stops': [s.to_json(False) for s in self.stops], 'Map': [l.to_json(False) for l in self.route]}
         return json.dumps(data, indent=(4 if pretty else None), ensure_ascii=False)
 
     def __unicode__(self):
