@@ -1,8 +1,11 @@
 import requests
 from cobroker import cocities
+from cobroker.model import Line, LINE_RETURN_DIRECTION
 from cobroker.parser_lines import parse_lines
 from cobroker.parser_routes import parse_route
 from cobroker.parser_stops import parse_stops
+
+
 
 
 def get_all_lines():

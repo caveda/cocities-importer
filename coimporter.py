@@ -35,9 +35,9 @@ def fetch_transport_data():
     lines = core.get_all_lines()
     log(f"{len(lines)} lines.")
     for l in lines:
-        log(f"Collecting stops of line {l.id}")
+        log(f"Collecting stops of line {l.get_line_request_unique_code()}")
         l.set_stops(core.get_line_stops(l))
-        log(f"Reading route of line {l.id}")
+        log(f"Reading route of line {l.get_line_request_unique_code()}")
         l.set_route(core.get_line_route(l))
     log(f"All information collected.")
     return lines
