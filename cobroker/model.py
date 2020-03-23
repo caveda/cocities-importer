@@ -40,6 +40,18 @@ class Line():
     def get_agency_direction(self):
         return "IDA" if self.direction == LINE_FORWARD_DIRECTION else "VLT"
 
+    def get_reverse_name(self):
+        result = self.name
+        if LINE_NAME_SEPARATOR in self.name:
+            parts = self.name.split(LINE_NAME_SEPARATOR)
+            name = ''
+            for i in range(len(parts)):
+                name += parts[(len(parts)-1)-i].strip()
+                if i < (len(parts) - 1):
+                    name += " - "
+            result = name.strip()
+        return result
+
     def get_origin_name(self):
         return self.origin
 
