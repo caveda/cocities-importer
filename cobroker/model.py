@@ -92,9 +92,17 @@ class Stop():
         self.name = name
         self.location = location
 
+    connections = [] # Array of connections
+
+    def set_connections (self, connections):
+        self.connections = connections
+
+    def connections_to_string(self):
+        return ", ".join(self.connections)
+
     def to_dict(self):
         """ Converts the object into a dictionary used for serializing """
-        result = {'Id': self.id, 'Na': self.name, 'Lc': self.location.to_dict()}
+        result = {'Id': self.id, 'Na': self.name, 'Co': self.connections_to_string(), 'Lc': self.location.to_dict()}
         return result
 
     def __unicode__(self):

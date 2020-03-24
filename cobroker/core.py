@@ -1,11 +1,10 @@
 import requests
 from cobroker import cocities
 from cobroker.model import Line, LINE_RETURN_DIRECTION
+from cobroker.parser_connections import parse_connections
 from cobroker.parser_lines import parse_lines
 from cobroker.parser_routes import parse_route
 from cobroker.parser_stops import parse_stops
-
-
 
 
 def get_all_lines():
@@ -31,6 +30,15 @@ def get_line_route(line):
     req = send_http_request(query)
     route = parse_route(req.text)
     return route
+
+
+def add_stops_connections(line):
+    """ Returns the complete list of lines without stops or routes. """
+    query = cocities.get_request_line_stops_info(line.get_line_request_unique_code())
+    req = send_http_request(query)
+    connections = parse_connections(req.text, line.id)
+    for s in line.stops:
+        s.set_connections(connections[s.id])
 
 
 def send_http_request(query):
