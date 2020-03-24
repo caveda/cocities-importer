@@ -80,8 +80,8 @@ class TestParserConnections(unittest.TestCase):
         # When
         connections = parse_connections(input_json,"11")
         # Then
-        expected_connections = {'7011': ['03', '28', '11', '22', '30', '72', '71', 'H7', '77', 'K8', 'F4', 'F2'],
-                                '9012': ['11', '22', 'H8', 'F9']}
+        expected_connections = {'7011': ['03', '28', '22', '30', '72', '71', 'H7', '77', 'K8', 'F4', 'F2'],
+                                '9012': ['22', 'H8', 'F9']}
         self.assertDictEqual(connections, expected_connections)
 
 
