@@ -35,7 +35,7 @@ def fetch_transport_data():
     log("Fetching lines list...")
     lines = core.get_all_lines()
     log(f"{len(lines)} lines.")
-    for i in range(len(lines)):
+    for i in range(3):
         l = lines[i]
         log(f"Collecting stops of line {l.get_line_request_unique_code()}")
         l.set_stops(core.get_line_stops(l))
@@ -47,7 +47,7 @@ def fetch_transport_data():
 
 def write_output_file(lines):
     with open('alllines.json', 'w', encoding='utf-8') as f:
-        json.dump([l.to_json(False) for l in lines], f, ensure_ascii=False, indent=4)
+        json.dump([l.to_dict() for l in lines], f, ensure_ascii=False, indent=4)
 
 
 def main():

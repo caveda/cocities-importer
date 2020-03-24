@@ -37,6 +37,9 @@ class Line():
     # route expressed as a array of Locations
     route = []
 
+    def get_client_line_id(self):
+        return ("I" if self.direction == LINE_FORWARD_DIRECTION else "V") + self.id
+
     def get_agency_direction(self):
         return "IDA" if self.direction == LINE_FORWARD_DIRECTION else "VLT"
 
@@ -46,7 +49,7 @@ class Line():
             parts = self.name.split(LINE_NAME_SEPARATOR)
             name = ''
             for i in range(len(parts)):
-                name += parts[(len(parts)-1)-i].strip()
+                name += parts[(len(parts) - 1) - i].strip()
                 if i < (len(parts) - 1):
                     name += " - "
             result = name.strip()
@@ -70,13 +73,15 @@ class Line():
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name
 
-    def to_json(self, pretty=False):
-        data = {'AgencyId': self.id, 'Name': self.name, 'Dir': self.direction,
-                'Stops': [s.to_json(False) for s in self.stops], 'Map': [l.to_json(False) for l in self.route]}
-        return json.dumps(data, indent=(4 if pretty else None), ensure_ascii=False)
-
     def __unicode__(self):
         return self.id
+
+    def to_dict(self):
+        """ Converts the object into a dictionary used for serializing """
+        result = {'Id': self.get_client_line_id(), 'AgencyId': self.id, 'Name': self.name.upper(), 'Dir': self.direction,
+                  'Stops': [s.to_dict() for s in self.stops],
+                  'Map': [l.to_dict() for l in self.route]}
+        return result
 
 
 class Stop():
@@ -87,9 +92,10 @@ class Stop():
         self.name = name
         self.location = location
 
-    def to_json(self, pretty=False):
-        data = {'id': self.id, 'name': self.name, 'lc': self.location.to_json(pretty)}
-        return json.dumps(data, indent=(4 if pretty else None), ensure_ascii=False)
+    def to_dict(self):
+        """ Converts the object into a dictionary used for serializing """
+        result = {'Id': self.id, 'Na': self.name, 'Lc': self.location.to_dict()}
+        return result
 
     def __unicode__(self):
         return self.id
@@ -114,9 +120,8 @@ class Location(object):
         lat, long = transform(Proj(EPSG_IN), Proj(EPSG_OUT), x, y)
         return cls(lat, long)
 
-    def to_json(self, pretty=False):
-        data = {'la': self.lat, 'lo': self.long}
-        return json.dumps(data, indent=(4 if pretty else None), ensure_ascii=False)
+    def to_dict(self):
+        return {'La': self.lat, 'Lo': self.long}
 
 
 def coordinates_to_locations(coordinates):
