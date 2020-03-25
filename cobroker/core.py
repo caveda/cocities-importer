@@ -1,3 +1,5 @@
+import re
+
 import requests
 from cobroker import cocities
 from cobroker.model import Line, LINE_RETURN_DIRECTION
@@ -33,12 +35,20 @@ def get_line_route(line):
 
 
 def add_stops_connections(line):
-    """ Returns the complete list of lines without stops or routes. """
+    """ Adds to line the connections of each of its stops using the remote service """
     query = cocities.get_request_line_stops_info(line.get_line_request_unique_code())
     req = send_http_request(query)
     connections = parse_connections(req.text, line.id)
     for s in line.stops:
         s.set_connections(connections[s.id])
+
+
+def add_stops_connections_from_cache(line, stops_connections):
+    """ Adds to line the connections of each of its stops using the dict stops_connections """
+    for s in line.stops:
+        assert stops_connections.get(s.id) is not None, f"Stop {s.id} is not in connections cache"
+        connections = list(filter(lambda x : re.match(f".{line.id}", x) is None, stops_connections[s.id]))
+        s.set_connections(connections)
 
 
 def send_http_request(query):
