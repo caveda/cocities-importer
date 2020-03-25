@@ -1,6 +1,8 @@
 import json
 import os
 import logging
+import time
+from datetime import timedelta
 
 from cobroker import core
 
@@ -46,7 +48,7 @@ def fetch_transport_data():
     lines = core.get_all_lines()
     log(f"{len(lines)} lines.")
     stops_connections = dict()  # dictionary of stops and the lines they belong to (stopid:[lines])
-    for i in range(len(lines)):
+    for i in range(5):
         l = lines[i]
         log(f"Fetching data of line {l.get_line_request_unique_code()}")
         log("  Collecting stops")
@@ -67,17 +69,20 @@ def add_stops_connections(lines, stops_connections):
         core.add_stops_connections_from_cache(l, stops_connections)
 
 
-def write_output_file(lines):
-    with open('alllines.json', 'w', encoding='utf-8') as f:
+def write_output_file(lines, file_name):
+    with open(file_name, 'w', encoding='utf-8') as f:
         json.dump([l.to_dict() for l in lines], f, ensure_ascii=False, indent=4)
-
+    log(f"Output file {file_name} generated")
 
 def main():
     """ Main function """
+    start = time.time()
     init_logging()
     set_environment()
     lines = fetch_transport_data()
-    write_output_file(lines)
+    write_output_file(lines, "alllines.json")
+    elapsed = time.time() - start
+    log(f"Execution time: {str(timedelta(seconds=elapsed))}")
 
 
 if __name__ == "__main__":
