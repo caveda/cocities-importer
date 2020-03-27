@@ -48,13 +48,15 @@ def fetch_transport_data():
     lines = core.get_all_lines()
     log(f"{len(lines)} lines.")
     stops_connections = dict()  # dictionary of stops and the lines they belong to (stopid:[lines])
-    for i in range(len(lines)):
+    for i in range(4):
         l = lines[i]
         log(f"Fetching data of line {l.get_line_request_unique_code()}")
         log("  Collecting stops")
         l.set_stops(core.get_line_stops(l))
         log("  Reading route")
         update_connections_with_line(stops_connections, l)
+        log("  Adding static schedule")
+        core.add_stops_static_schedule(l)
 
     add_stops_connections(lines, stops_connections)
 

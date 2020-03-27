@@ -1,6 +1,7 @@
 import unittest
 
-from cobroker.model import Line, LINE_FORWARD_DIRECTION
+from cobroker.model import Line, LINE_FORWARD_DIRECTION, LINE_FORWARD_DIRECTION_CODE, LINE_RETURN_DIRECTION, \
+    LINE_RETURN_DIRECTION_CODE
 
 
 class TestLine(unittest.TestCase):
@@ -36,6 +37,21 @@ class TestLine(unittest.TestCase):
             # Then
             self.assertEqual(reverse, c[1])
 
+    def test_direction_code_forward_returnedCorrectDirectionCode(self):
+        # Given
+        l = Line(66, "PLACE1 - PLACE2", LINE_FORWARD_DIRECTION)
+        # When
+        code = l.get_agency_direction_code()
+        # Then
+        self.assertEqual(code, LINE_FORWARD_DIRECTION_CODE)
+
+    def test_direction_code_backward_returnedCorrectDirectionCode(self):
+        # Given
+        l = Line(66, "PLACE1 - PLACE2", LINE_RETURN_DIRECTION)
+        # When
+        code = l.get_agency_direction_code()
+        # Then
+        self.assertEqual(code, LINE_RETURN_DIRECTION_CODE)
 
 if __name__ == '__main__':
     unittest.main()

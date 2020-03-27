@@ -3,14 +3,17 @@ import math
 import numpy as np
 from pyproj import Proj, transform
 
+# Constants
 EPSG_OUT = 'epsg:4326'
-
 EPSG_IN = 'epsg:23030'
-
 LINE_FORWARD_DIRECTION = 'FORWARD'
 LINE_RETURN_DIRECTION = 'BACKWARD'
+LINE_FORWARD_DIRECTION_CODE = '1'
+LINE_RETURN_DIRECTION_CODE = '2'
 LINE_NAME_SEPARATOR = '-'
-
+WORKING_DAY_CODE = "1"
+SATURDAY_DAY_CODE = "2"
+SUNDAY_DAY_CODE = "3"
 
 class Line():
     """ Entity representing a transport Line """
@@ -40,8 +43,11 @@ class Line():
     def get_client_line_id(self):
         return ("I" if self.direction == LINE_FORWARD_DIRECTION else "V") + self.id
 
-    def get_agency_direction(self):
+    def get_agency_direction_name(self):
         return "IDA" if self.direction == LINE_FORWARD_DIRECTION else "VLT"
+
+    def get_agency_direction_code(self):
+        return LINE_FORWARD_DIRECTION_CODE if self.direction == LINE_FORWARD_DIRECTION else LINE_RETURN_DIRECTION_CODE
 
     def get_reverse_name(self):
         result = self.name
@@ -62,7 +68,7 @@ class Line():
         return self.destination
 
     def get_line_request_unique_code(self):
-        return self.id + self.get_agency_direction()
+        return self.id + self.get_agency_direction_name()
 
     def set_stops(self, stops):
         self.stops = stops
@@ -71,7 +77,7 @@ class Line():
         self.route = route
 
     def __eq__(self, other):
-        return self.id == other.id and self.name == other.name
+        return self.id == other.id and self.name == other.name and self.direction == other.direction
 
     def __unicode__(self):
         return self.id
@@ -84,6 +90,22 @@ class Line():
         return result
 
 
+class Schedule(object):
+    """ Class representing the schedule to a stop."""
+
+    def __init__(self, working_times_list, saturday_times_list, sunday_times_list):
+        self.working = working_times_list
+        self.saturday = saturday_times_list
+        self.sunday = sunday_times_list
+
+    def __eq__(self, other):
+        return self.working == other.working and self.saturday == other.saturday and \
+               self.sunday == other.sunday
+
+    def to_dict(self):
+        return {'Wor': ",".join(self.working), 'Sat': ",".join(self.saturday), 'Sun': ",".join(self.sunday)}
+
+
 class Stop():
     """ Entity representing a Stop """
 
@@ -93,23 +115,27 @@ class Stop():
         self.location = location
 
     connections = [] # Array of connections
+    schedule = Schedule([], [], [])
 
     def set_connections (self, connections):
         self.connections = connections
 
     def connections_to_string(self):
-        return ", ".join(self.connections)
+        return " ".join(self.connections)
 
     def to_dict(self):
         """ Converts the object into a dictionary used for serializing """
-        result = {'Id': self.id, 'Na': self.name, 'Co': self.connections_to_string(), 'Lc': self.location.to_dict()}
+        result = {'Id': self.id, 'Na': self.name, 'Co': self.connections_to_string(), \
+                  'Lc': self.location.to_dict(), 'Sc': self.schedule.to_dict()}
         return result
 
     def __unicode__(self):
         return self.id
 
     def __eq__(self, other):
-        return self.id == other.id and self.name == other.name and self.location == other.location
+        return self.id == other.id and self.name == other.name and \
+               self.location == other.location and self.schedule == other.schedule
+
 
 
 class Location(object):
@@ -141,3 +167,5 @@ def coordinates_to_locations(coordinates):
     for i in range(length):
         result.append(Location(lats[i], longs[i]))
     return result
+
+
