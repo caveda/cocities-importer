@@ -81,7 +81,7 @@ def get_request_line_route_map(code):
 REQUEST_STOP_STATIC_SCHEDULE = f'?s=BBLISTHORP&u=BILBOBUS&r=JSON&p0={TOKEN_LINE_CODE}&p1={TOKEN_STOP_ID}&p2={TOKEN_DIRECTION_ID}'
 
 
-def get_request_line_route_map(line_id, stop_id, direction_code):
+def get_request_stop_schedule(line_id, stop_id, direction_code):
     """ Static schedule """
     return Query(URI_SERVICE_WS + REQUEST_STOP_STATIC_SCHEDULE.
                  replace(TOKEN_LINE_CODE, line_id).

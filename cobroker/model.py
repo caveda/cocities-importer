@@ -8,6 +8,8 @@ EPSG_OUT = 'epsg:4326'
 EPSG_IN = 'epsg:23030'
 LINE_FORWARD_DIRECTION = 'FORWARD'
 LINE_RETURN_DIRECTION = 'BACKWARD'
+LINE_FORWARD_DIRECTION_CODE = '1'
+LINE_RETURN_DIRECTION_CODE = '2'
 LINE_NAME_SEPARATOR = '-'
 WORKING_DAY_CODE = "1"
 SATURDAY_DAY_CODE = "2"
@@ -41,8 +43,11 @@ class Line():
     def get_client_line_id(self):
         return ("I" if self.direction == LINE_FORWARD_DIRECTION else "V") + self.id
 
-    def get_agency_direction(self):
+    def get_agency_direction_name(self):
         return "IDA" if self.direction == LINE_FORWARD_DIRECTION else "VLT"
+
+    def get_agency_direction_code(self):
+        return LINE_FORWARD_DIRECTION_CODE if self.direction == LINE_FORWARD_DIRECTION else LINE_RETURN_DIRECTION_CODE
 
     def get_reverse_name(self):
         result = self.name
@@ -63,7 +68,7 @@ class Line():
         return self.destination
 
     def get_line_request_unique_code(self):
-        return self.id + self.get_agency_direction()
+        return self.id + self.get_agency_direction_name()
 
     def set_stops(self, stops):
         self.stops = stops
@@ -129,7 +134,7 @@ class Stop():
 
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name and \
-               self.location == other.location and self.sc
+               self.location == other.location and self.schedule == other.schedule
 
 
 

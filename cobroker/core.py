@@ -6,6 +6,7 @@ from cobroker.model import Line, LINE_RETURN_DIRECTION
 from cobroker.parser_connections import parse_connections
 from cobroker.parser_lines import parse_lines
 from cobroker.parser_routes import parse_route
+from cobroker.parser_schedule import parse_schedule
 from cobroker.parser_stops import parse_stops
 
 
@@ -32,6 +33,14 @@ def get_line_route(line):
     req = send_http_request(query)
     route = parse_route(req.text)
     return route
+
+
+def add_stops_static_schedule(line):
+    """ Fills out the estimated schedule of each stop of the line """
+    for s in line.stops:
+        query = cocities.get_request_stop_schedule(line.id, s.id, line.get_agency_direction_code() )
+        req = send_http_request(query)
+        s.schedule = parse_schedule(req.text)
 
 
 def add_stops_connections(line):
