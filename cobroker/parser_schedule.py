@@ -7,8 +7,12 @@ from cobroker.model import Schedule, WORKING_DAY_CODE, SATURDAY_DAY_CODE, SUNDAY
 def parse_schedule(response):
     """ Parse json response containing the schedule of a stop """
     data = json.loads(response)
-    raw_schedules = data["RESPUESTA"]["LISTA"]["DETALLE"]
-    schedule = digest_json_schedules(raw_schedules)
+    try:
+        raw_schedules = data["RESPUESTA"]["LISTA"]["DETALLE"]
+        schedule = digest_json_schedules(raw_schedules)
+    except:
+        # Some schedules are missing on the server
+        schedule = Schedule([], [], [])
     return schedule
 
 
