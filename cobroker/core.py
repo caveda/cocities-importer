@@ -1,3 +1,4 @@
+import concurrent.futures
 import re
 
 import requests
@@ -35,12 +36,24 @@ def get_line_route(line):
     return route
 
 
+def get_stop_schedule(l, s):
+    """ Fills out the schedule of stop s of line line """
+    query = cocities.get_request_stop_schedule(l.id, s.id, l.get_agency_direction_code())
+    req = send_http_request(query)
+    s.schedule = parse_schedule(req.text)
+
+
 def add_stops_static_schedule(line):
     """ Fills out the estimated schedule of each stop of the line """
-    for s in line.stops:
-        query = cocities.get_request_stop_schedule(line.id, s.id, line.get_agency_direction_code() )
-        req = send_http_request(query)
-        s.schedule = parse_schedule(req.text)
+    out = []
+    max_concurrency = 30
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_concurrency) as executor:
+        future_to_url = (executor.submit(get_stop_schedule, line, s) for s in line.stops)
+        for future in concurrent.futures.as_completed(future_to_url):
+            try:
+                data = future.result()
+            except Exception as exc:
+                data = str(type(exc))
 
 
 def add_stops_connections(line):
