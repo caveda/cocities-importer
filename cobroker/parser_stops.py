@@ -20,14 +20,20 @@ def parse_stops(xml_response, line):
             coordinates.append((x,y))
 
     # Optimization: transform all stops coordinates at once
-    locations = coordinates_to_locations(coordinates)
-    for i in range(len(locations)):
-        result[i].update_location(locations[i])
+    if len(coordinates) > 0:
+        transform_stops_coordinates(coordinates, result)
     return result
 
 
+def transform_stops_coordinates(coordinates, stops):
+    """ Updates stops with the locations transformed from coordinates """
+    locations = coordinates_to_locations(coordinates)
+    for i in range(len(locations)):
+        stops[i].update_location(locations[i])
+
+
 def add_stop_without_duplicates(result, s, stop_id):
-    """ add stops without duplication """
+    """ Adds stops without duplication """
     x, y = parse_stop_coordinates(s)
     stop = Stop(stop_id, parse_stop_name(s), Location(float(x), float(y)))
     result.append(stop)
