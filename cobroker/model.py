@@ -15,6 +15,7 @@ WORKING_DAY_CODE = "1"
 SATURDAY_DAY_CODE = "2"
 SUNDAY_DAY_CODE = "3"
 
+
 class Line():
     """ Entity representing a transport Line """
 
@@ -84,7 +85,8 @@ class Line():
 
     def to_dict(self):
         """ Converts the object into a dictionary used for serializing """
-        result = {'Id': self.get_client_line_id(), 'AgencyId': self.id, 'Name': self.name.upper(), 'Dir': self.direction,
+        result = {'Id': self.get_client_line_id(), 'AgencyId': self.id, 'Name': self.name.upper(),
+                  'Dir': self.direction,
                   'Stops': [s.to_dict() for s in self.stops],
                   'Map': [l.to_dict() for l in self.route]}
         return result
@@ -114,10 +116,13 @@ class Stop():
         self.name = name
         self.location = location
 
-    connections = [] # Array of connections
+    connections = []  # Array of connections
     schedule = Schedule([], [], [])
 
-    def set_connections (self, connections):
+    def update_location(self, location):
+        self.location = location
+
+    def set_connections(self, connections):
         self.connections = connections
 
     def connections_to_string(self):
@@ -135,7 +140,6 @@ class Stop():
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name and \
                self.location == other.location and self.schedule == other.schedule
-
 
 
 class Location(object):
@@ -167,5 +171,3 @@ def coordinates_to_locations(coordinates):
     for i in range(length):
         result.append(Location(lats[i], longs[i]))
     return result
-
-
