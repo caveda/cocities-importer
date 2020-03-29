@@ -1,5 +1,6 @@
 import concurrent.futures
 import re
+from concurrent.futures._base import wait
 
 import requests
 from cobroker import cocities
@@ -38,22 +39,25 @@ def get_line_route(line):
 
 def get_stop_schedule(l, s):
     """ Fills out the schedule of stop s of line line """
-    query = cocities.get_request_stop_schedule(l.id, s.id, l.get_agency_direction_code())
-    req = send_http_request(query)
-    s.schedule = parse_schedule(req.text)
+    max_retries = 3
+    for i in range(max_retries-1):
+        try:
+            query = cocities.get_request_stop_schedule(l.id, s.id, l.get_agency_direction_code())
+            req = send_http_request(query)
+            s.schedule = parse_schedule(req.text)
+            break
+        except Exception as ex:
+            print(f"Exception captured fetching schedule of {l.get_client_line_id()}:{s.id}: {ex}")
 
 
 def add_stops_static_schedule(line):
     """ Fills out the estimated schedule of each stop of the line """
-    out = []
-    max_concurrency = 30
+    max_concurrency = 20
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_concurrency) as executor:
-        future_to_url = (executor.submit(get_stop_schedule, line, s) for s in line.stops)
-        for future in concurrent.futures.as_completed(future_to_url):
-            try:
-                data = future.result()
-            except Exception as exc:
-                data = str(type(exc))
+        future_schedule = (executor.submit(get_stop_schedule, line, s) for s in line.stops)
+        for f in concurrent.futures.as_completed(future_schedule):
+            f.result()
+
 
 
 def add_stops_connections(line):
