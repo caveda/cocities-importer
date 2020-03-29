@@ -1,5 +1,5 @@
 from xml.dom import minidom
-from cobroker.model import Stop, Location
+from cobroker.model import Stop, Location, coordinates_to_locations
 import re
 
 
@@ -10,19 +10,34 @@ def parse_stops(xml_response, line):
     stop_nodes = xmldoc.getElementsByTagName("DETALLE")
     result = []
     added_stops = set()
+    coordinates = [] # Locations are stored to make a batch transformation which is way faster
     for s in stop_nodes:
         line_name = parse_stop_line_name(s)
         stop_id = parse_stop_id(s)
-        add_stop_without_duplicates(added_stops, line, line_name, result, s, stop_id)
+        if stop_id not in added_stops and stop_belongs_line(line, line_name):
+            x, y = add_stop_without_duplicates(result, s, stop_id)
+            added_stops.add(stop_id)
+            coordinates.append((x,y))
+
+    # Optimization: transform all stops coordinates at once
+    if len(coordinates) > 0:
+        transform_stops_coordinates(coordinates, result)
     return result
 
 
-def add_stop_without_duplicates(added_stops, line, line_name, result, s, stop_id):
-    if stop_id not in added_stops and stop_belongs_line(line, line_name):
-        x, y = parse_stop_coordinates(s)
-        stop = Stop(stop_id, parse_stop_name(s), Location.from_coordinates(x, y))
-        result.append(stop)
-        added_stops.add(stop_id)
+def transform_stops_coordinates(coordinates, stops):
+    """ Updates stops with the locations transformed from coordinates """
+    locations = coordinates_to_locations(coordinates)
+    for i in range(len(locations)):
+        stops[i].update_location(locations[i])
+
+
+def add_stop_without_duplicates(result, s, stop_id):
+    """ Adds stops without duplication """
+    x, y = parse_stop_coordinates(s)
+    stop = Stop(stop_id, parse_stop_name(s), Location(float(x), float(y)))
+    result.append(stop)
+    return x, y
 
 
 def stop_belongs_line(line, stop_line_name):

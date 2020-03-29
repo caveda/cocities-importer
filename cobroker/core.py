@@ -1,8 +1,8 @@
+import concurrent.futures
 import re
 
 import requests
 from cobroker import cocities
-from cobroker.model import Line, LINE_RETURN_DIRECTION
 from cobroker.parser_connections import parse_connections
 from cobroker.parser_lines import parse_lines
 from cobroker.parser_routes import parse_route
@@ -35,12 +35,26 @@ def get_line_route(line):
     return route
 
 
+def get_stop_schedule(l, s):
+    """ Fills out the schedule of stop s of line line """
+    max_retries = 3
+    for i in range(max_retries - 1):
+        try:
+            query = cocities.get_request_stop_schedule(l.id, s.id, l.get_agency_direction_code())
+            req = send_http_request(query)
+            s.schedule = parse_schedule(req.text)
+            break
+        except Exception as ex:
+            print(f"Exception captured fetching schedule of {l.get_client_line_id()}:{s.id}: {ex}")
+
+
 def add_stops_static_schedule(line):
     """ Fills out the estimated schedule of each stop of the line """
-    for s in line.stops:
-        query = cocities.get_request_stop_schedule(line.id, s.id, line.get_agency_direction_code() )
-        req = send_http_request(query)
-        s.schedule = parse_schedule(req.text)
+    max_concurrency = 20
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_concurrency) as executor:
+        future_schedule = (executor.submit(get_stop_schedule, line, s) for s in line.stops)
+        for f in concurrent.futures.as_completed(future_schedule):
+            f.result()
 
 
 def add_stops_connections(line):
@@ -56,7 +70,7 @@ def add_stops_connections_from_cache(line, stops_connections):
     """ Adds to line the connections of each of its stops using the dict stops_connections """
     for s in line.stops:
         assert stops_connections.get(s.id) is not None, f"Stop {s.id} is not in connections cache"
-        connections = list(filter(lambda x : re.match(f".{line.id}", x) is None, stops_connections[s.id]))
+        connections = list(filter(lambda x: re.match(f".{line.id}", x) is None, stops_connections[s.id]))
         s.set_connections(connections)
 
 

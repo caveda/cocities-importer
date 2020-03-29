@@ -1,13 +1,12 @@
 import json
 import os
-import logging
+import logger
 import time
 from datetime import timedelta
 
+from codata_linter import sanitize
+from logger import log
 from cobroker import core
-
-# Globals
-logger = logging.getLogger('coimporter')
 
 
 def set_environment():
@@ -17,19 +16,6 @@ def set_environment():
     for line in processed.splitlines():
         var, _, value = line.partition('=')
         os.environ[var] = value.replace('"', '')
-
-
-def init_logging():
-    """ Initialize the logging mechanism """
-    logging.basicConfig(filename='coimporter.log',
-                        level=logging.INFO,
-                        format='%(asctime)s.%(msecs)03d %(levelname)-8s %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S')
-    return logger
-
-
-def log(msg):
-    logging.info(msg)
 
 
 def update_connections_with_line(stops_connections, l):
@@ -73,13 +59,14 @@ def add_stops_connections(lines, stops_connections):
 
 def write_output_file(lines, file_name):
     with open(file_name, 'w', encoding='utf-8') as f:
-        json.dump([l.to_dict() for l in lines], f, ensure_ascii=False, indent=4)
+        json.dump([l.to_dict() for l in sanitize(lines)], f, ensure_ascii=False, indent=4)
     log(f"Output file {file_name} generated")
+
 
 def main():
     """ Main function """
     start = time.time()
-    init_logging()
+    logger.init_logging()
     set_environment()
     lines = fetch_transport_data()
     write_output_file(lines, "alllines.json")
