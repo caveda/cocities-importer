@@ -1,6 +1,7 @@
 import json
 import re
 
+from cobroker import cologger
 from cobroker.model import Schedule, WORKING_DAY_CODE, SATURDAY_DAY_CODE, SUNDAY_DAY_CODE
 
 
@@ -13,6 +14,7 @@ def parse_schedule(response):
     except:
         # Some schedules are missing on the server
         schedule = Schedule([], [], [])
+        cologger.log(f"Missing schedule")
     return schedule
 
 
