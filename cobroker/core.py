@@ -2,7 +2,7 @@ import concurrent.futures
 import re
 
 import requests
-from cobroker import cocities
+from cobroker import cocities, cologger
 from cobroker.parser_connections import parse_connections
 from cobroker.parser_lines import parse_lines
 from cobroker.parser_routes import parse_route
@@ -12,6 +12,7 @@ from cobroker.parser_stops import parse_stops
 
 def get_all_lines():
     """ Returns the complete list of lines without stops or routes. """
+    cologger.log("This is just a trace from cobroker")
     query = cocities.get_request_all_lines()
     req = send_http_request(query)
     req.encoding = 'utf-8'  # force utf-8 encoding to preserve special chars
@@ -45,7 +46,7 @@ def get_stop_schedule(l, s):
             s.schedule = parse_schedule(req.text)
             break
         except Exception as ex:
-            print(f"Exception captured fetching schedule of {l.get_client_line_id()}:{s.id}: {ex}")
+            cologger.log(f"Exception captured fetching schedule of {l.get_client_line_id()}:{s.id}: {ex}")
 
 
 def add_stops_static_schedule(line):

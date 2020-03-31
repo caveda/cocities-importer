@@ -7,7 +7,7 @@ from datetime import timedelta
 
 from codata_linter import sanitize
 from logger import log
-from cobroker import core
+from cobroker import core, cologger
 
 
 def set_environment():
@@ -70,11 +70,16 @@ def parse_arguments():
     return parser.parse_args()
 
 
+def initialize_logging():
+    logger.init_logging()
+    cologger.set_logger(logger.logger)
+
+
 def main():
     """ Main function """
     start = time.time()
     args = parse_arguments()
-    logger.init_logging()
+    initialize_logging()
     set_environment()
     lines = fetch_transport_data()
     write_output_file(lines, args.output)
