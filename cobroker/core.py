@@ -12,7 +12,6 @@ from cobroker.parser_stops import parse_stops
 
 def get_all_lines():
     """ Returns the complete list of lines without stops or routes. """
-    cologger.log("This is just a trace from cobroker")
     query = cocities.get_request_all_lines()
     req = send_http_request(query)
     req.encoding = 'utf-8'  # force utf-8 encoding to preserve special chars
