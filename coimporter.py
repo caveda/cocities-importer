@@ -2,6 +2,7 @@ import json
 import os
 import logger
 import time
+import argparse
 from datetime import timedelta
 
 from codata_linter import sanitize
@@ -63,13 +64,20 @@ def write_output_file(lines, file_name):
     log(f"Output file {file_name} generated")
 
 
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='Import transit data from CoCities.')
+    parser.add_argument('output', nargs='?', help='Name of the output file', default="alllines.json")
+    return parser.parse_args()
+
+
 def main():
     """ Main function """
     start = time.time()
+    args = parse_arguments()
     logger.init_logging()
     set_environment()
     lines = fetch_transport_data()
-    write_output_file(lines, "alllines.json")
+    write_output_file(lines, args.output)
     elapsed = time.time() - start
     log(f"Execution time: {str(timedelta(seconds=elapsed))}")
 
