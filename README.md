@@ -10,7 +10,8 @@ usage: coimporter.py [-h] [output]
 Import transit data from CoCities.
 
 positional arguments:
-  output      Name of the output file
+  output      Output file without extension. Both json and zip file will be
+              generated.
 
 optional arguments:
   -h, --help  show this help message and exit
