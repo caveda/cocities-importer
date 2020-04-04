@@ -150,12 +150,12 @@ class Location(object):
         self.long = long
 
     def __eq__(self, other):
-        return math.isclose(self.lat, other.lat, abs_tol=0.0000001) and \
-               math.isclose(self.long, other.long, abs_tol=0.0000001)
+        return math.isclose(self.lat, other.lat, abs_tol=0.0001) and \
+               math.isclose(self.long, other.long, abs_tol=0.0001)
 
     @classmethod
     def from_coordinates(cls, x, y):
-        lat, long = transform(Proj(EPSG_IN), Proj(EPSG_OUT), x, y)
+        long, lat = transform(Proj(init=EPSG_IN), Proj(init=EPSG_OUT), x, y)
         return cls(lat, long)
 
     def to_dict(self):
@@ -165,7 +165,7 @@ class Location(object):
 def coordinates_to_locations(coordinates):
     """ Receives a matrix of coordinates and transforms it into a list of Locations """
     np_coords = np.array(coordinates)
-    lats, longs = transform(Proj(EPSG_IN), Proj(EPSG_OUT), np_coords[:, 0], np_coords[:, 1])
+    longs, lats = transform(Proj(init=EPSG_IN), Proj(init=EPSG_OUT), np_coords[:, 0], np_coords[:, 1])
     length = len(lats)
     result = []
     for i in range(length):
