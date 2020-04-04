@@ -1,13 +1,16 @@
 import json
 import os
+from pathlib import Path
+
 import logger
 import time
 import argparse
 from datetime import timedelta
-
+from zipfile import ZipFile, ZIP_DEFLATED
 from codata_linter import sanitize
 from logger import log
 from cobroker import core, cologger
+from utils import calculate_hash
 
 
 def set_environment():
@@ -35,7 +38,7 @@ def fetch_transport_data():
     lines = core.get_all_lines()
     log(f"{len(lines)} lines.")
     stops_connections = dict()  # dictionary of stops and the lines they belong to (stopid:[lines])
-    for i in range(len(lines)):
+    for i in range(2):
         l = lines[i]
         log(f"Fetching data of line {l.get_line_request_unique_code()}")
         log("  Collecting stops")
@@ -64,15 +67,39 @@ def write_output_file(lines, file_name):
     log(f"Output file {file_name} generated")
 
 
+def generate_zip_file(file_to_zip, output_file):
+    # Create a ZipFile Object
+    with ZipFile(output_file, 'w',compression=ZIP_DEFLATED) as zipObj:
+        zipObj.write(file_to_zip)
+    log(f"Zip file {output_file} generated")
+        
+
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Import transit data from CoCities.')
-    parser.add_argument('output', nargs='?', help='Name of the output file', default="alllines.json")
+    parser.add_argument('output', nargs='?', help='Output file without extension. Both json and zip file will be generated.', default="alllines")
     return parser.parse_args()
 
 
 def initialize_logging():
     logger.init_logging()
     cologger.set_logger(logger.logger)
+
+
+def generate_metadata_file(data_file, meta_file):
+    content = {'hash': calculate_hash(data_file), "time": str(time.time())}
+    with open(meta_file, 'w') as f:
+        json.dump(content, f)
+    log(f"Metadata file {meta_file} generated")
+
+
+def generate_output_files(lines, output):
+    data_file = output + ".json"
+    zip_file = output + ".zip"
+    meta_file = output + "-meta.json"
+    write_output_file(lines, data_file)
+    generate_metadata_file(data_file,meta_file)
+    generate_zip_file(data_file,zip_file)
 
 
 def main():
@@ -82,7 +109,7 @@ def main():
     initialize_logging()
     set_environment()
     lines = fetch_transport_data()
-    write_output_file(lines, args.output)
+    generate_output_files(lines, args.output)
     elapsed = time.time() - start
     log(f"Execution time: {str(timedelta(seconds=elapsed))}")
 

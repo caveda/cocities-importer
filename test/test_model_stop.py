@@ -12,7 +12,7 @@ class TestStop(unittest.TestCase):
         # When
         s = Stop("65422", "Some name", location)
         # Then
-        self.assertEqual(s.location, Location(43.26270820473875, -2.933814830041445))
+        self.assertEqual(s.location, Location(43.262694343397534, -2.933763385564037))
 
 
 if __name__ == '__main__':

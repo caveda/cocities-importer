@@ -40,8 +40,8 @@ class TestParserStops(unittest.TestCase):
         # When
         stops = parse_stops(input_xml, line)
         # Then
-        expected_stops = [Stop("1001", "Stop name 1", Location(43.26806999978483,-2.9245073992073762)),
-                          Stop("1002", "Stop name 2", Location(43.26149629243633,-2.9278916590650783))]
+        expected_stops = [Stop("1001", "Stop name 1", Location(43.26805613861105,-2.924456101471126)),
+                          Stop("1002", "Stop name 2", Location(43.26148247545685,-2.9278402600777014))]
         self.assertListEqual(stops, expected_stops)
 
 if __name__ == '__main__':
