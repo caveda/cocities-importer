@@ -1,5 +1,7 @@
 import json
 import math
+import re
+
 import numpy as np
 from pyproj import Proj, transform
 
@@ -20,7 +22,7 @@ class Line():
     """ Entity representing a transport Line """
 
     def __init__(self, id, name, direction):
-        self.id = id
+        self.id = str(id)
         self.name = name
         self.direction = direction
         if LINE_NAME_SEPARATOR in self.name:
@@ -77,6 +79,9 @@ class Line():
     def set_route(self, route):
         self.route = route
 
+    def is_night_line(self):
+        return re.match("([Gg])\\d", self.id) is not None
+
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name and self.direction == other.direction
 
@@ -86,7 +91,7 @@ class Line():
     def to_dict(self):
         """ Converts the object into a dictionary used for serializing """
         result = {'Id': self.get_client_line_id(), 'AgencyId': self.id, 'Name': self.name.upper(),
-                  'Dir': self.direction,
+                  'Dir': self.direction, 'Night': self.is_night_line(),
                   'Stops': [s.to_dict() for s in self.stops],
                   'Map': [l.to_dict() for l in self.route]}
         return result
