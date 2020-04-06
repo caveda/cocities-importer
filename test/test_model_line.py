@@ -25,12 +25,12 @@ class TestLine(unittest.TestCase):
 
     def test_reverse_name_returnedNameReversed(self):
         # Given
-        cases = [(Line(66, "PLACE1 - Place2", LINE_FORWARD_DIRECTION),"Place2 - PLACE1"),
-                 (Line(66, "PLACE1 - PLACE2/PLACE3", LINE_FORWARD_DIRECTION),"PLACE2/PLACE3 - PLACE1"),
-                 (Line(66, "PLACE1 - Place2 - PLACE3", LINE_FORWARD_DIRECTION),"PLACE3 - Place2 - PLACE1"),
-                 (Line(66, "PLACE1 VERY LONG", LINE_FORWARD_DIRECTION),"PLACE1 VERY LONG"),
-                 (Line(66, "PLACE1 - Place 2 long", LINE_FORWARD_DIRECTION),"Place 2 long - PLACE1"),
-                 (Line(66, "Place 1 long - Place2", LINE_FORWARD_DIRECTION),"Place2 - Place 1 long")]
+        cases = [(Line(66, "PLACE1 - Place2", LINE_FORWARD_DIRECTION), "Place2 - PLACE1"),
+                 (Line(66, "PLACE1 - PLACE2/PLACE3", LINE_FORWARD_DIRECTION), "PLACE2/PLACE3 - PLACE1"),
+                 (Line(66, "PLACE1 - Place2 - PLACE3", LINE_FORWARD_DIRECTION), "PLACE3 - Place2 - PLACE1"),
+                 (Line(66, "PLACE1 VERY LONG", LINE_FORWARD_DIRECTION), "PLACE1 VERY LONG"),
+                 (Line(66, "PLACE1 - Place 2 long", LINE_FORWARD_DIRECTION), "Place 2 long - PLACE1"),
+                 (Line(66, "Place 1 long - Place2", LINE_FORWARD_DIRECTION), "Place2 - Place 1 long")]
         for c in cases:
             # When
             reverse = c[0].get_reverse_name()
@@ -52,6 +52,28 @@ class TestLine(unittest.TestCase):
         code = l.get_agency_direction_code()
         # Then
         self.assertEqual(code, LINE_RETURN_DIRECTION_CODE)
+
+    def test_is_night_line_dayLines_returnFalse(self):
+        # Given
+        lines = [Line(66, "PLACE1 - PLACE2", LINE_RETURN_DIRECTION),
+                 Line("H1", "PLACE1 - PLACE2", LINE_FORWARD_DIRECTION),
+                 Line("3", "PLACE1 - PLACE2", LINE_RETURN_DIRECTION),
+                 Line("GG", "PLACE1 - PLACE2", LINE_RETURN_DIRECTION)]
+
+        # When - Then
+        for l in lines:
+            self.assertEqual(l.is_night_line(), False)
+
+    def test_is_night_line_nightLines_returnTrue(self):
+        # Given
+        lines = [Line("g1", "PLACE1 - PLACE2", LINE_FORWARD_DIRECTION),
+                 Line("G12", "PLACE1 - PLACE2", LINE_RETURN_DIRECTION),
+                 Line("G9", "PLACE1 - PLACE2", LINE_RETURN_DIRECTION)]
+
+        # When - Then
+        for l in lines:
+            self.assertEqual(l.is_night_line(), True)
+
 
 if __name__ == '__main__':
     unittest.main()

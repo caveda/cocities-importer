@@ -38,7 +38,7 @@ def fetch_transport_data():
     lines = core.get_all_lines()
     log(f"{len(lines)} lines.")
     stops_connections = dict()  # dictionary of stops and the lines they belong to (stopid:[lines])
-    for i in range(2):
+    for i in range(len(lines)):
         l = lines[i]
         log(f"Fetching data of line {l.get_line_request_unique_code()}")
         log("  Collecting stops")
