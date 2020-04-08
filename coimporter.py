@@ -70,7 +70,7 @@ def write_output_file(lines, file_name):
 def generate_zip_file(file_to_zip, output_file):
     # Create a ZipFile Object
     with ZipFile(output_file, 'w',compression=ZIP_DEFLATED) as zipObj:
-        zipObj.write(file_to_zip)
+        zipObj.write(file_to_zip, os.path.basename(file_to_zip))
     log(f"Zip file {output_file} generated")
         
 
