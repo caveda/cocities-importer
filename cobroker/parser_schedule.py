@@ -37,6 +37,21 @@ def schedule_to_array(schedule):
 
 def build_schedule(result):
     """ Builds a Schedule object out of a dictionary """
-    return Schedule(result.get(WORKING_DAY_CODE, []),
-                    result.get(SATURDAY_DAY_CODE, []),
-                    result.get(SUNDAY_DAY_CODE, []))
+    return Schedule(sanitize_schedule_times(result.get(WORKING_DAY_CODE, [])),
+                    sanitize_schedule_times(result.get(SATURDAY_DAY_CODE, [])),
+                    sanitize_schedule_times(result.get(SUNDAY_DAY_CODE, [])))
+
+
+def sanitize_schedule_times(schedule):
+    """ Some time comes in the wrong format, e.g. 26:11 which this function fixes and replaces by 02:11 """
+    for i in range(len(schedule)):
+        schedule[i] = schedule[i].replace("24:", "00:"). \
+            replace("25:", "01:"). \
+            replace("26:", "02:"). \
+            replace("27:", "03:"). \
+            replace("28:", "04:"). \
+            replace("29:", "05:"). \
+            replace("30:", "06:"). \
+            replace("31:", "07:"). \
+            replace("32:", "08:")
+    return schedule
