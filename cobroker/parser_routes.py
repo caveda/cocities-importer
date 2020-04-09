@@ -1,7 +1,5 @@
 import json
-import logging
-
-from cobroker.model import Location, coordinates_to_locations
+from cobroker.model import coordinates_to_locations
 
 
 def parse_route(response):
