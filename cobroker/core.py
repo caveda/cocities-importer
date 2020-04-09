@@ -27,11 +27,23 @@ def get_line_stops(line):
     return stops
 
 
-def get_line_route(line):
+def get_stops_points(line):
+    """ Returns an array with the locations of the line stops. """
+    locations = map(lambda s: s.location, line.stops)
+    return list(locations)
+
+
+def get_line_route(l):
     """ Returns the complete list of lines without stops or routes. """
-    query = cocities.get_request_line_route_map(line.get_line_request_unique_code())
-    req = send_http_request(query)
-    route = parse_route(req.text)
+    try:
+        query = cocities.get_request_line_route_map(l.get_line_request_unique_code())
+        req = send_http_request(query)
+        route = parse_route(req.text)
+    except Exception as ex:
+        # Route sometimes does not return anything. Return locations of stops as route.
+        cologger.log(f"Exception captured fetching route of {l.get_client_line_id()}: {ex}")
+        cologger.log(f"Replacing route by stops sequence.")
+        route = get_stops_points(l)
     return route
 
 

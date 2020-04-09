@@ -44,6 +44,8 @@ def fetch_transport_data():
         log("  Collecting stops")
         l.set_stops(core.get_line_stops(l))
         log("  Reading route")
+        l.set_route(core.get_line_route(l))
+        log("  Gathering stops connections")
         update_connections_with_line(stops_connections, l)
         log("  Adding static schedule")
         core.add_stops_static_schedule(l)
