@@ -24,7 +24,7 @@ def digest_json_schedules(json_schedules):
     for s in json_schedules:
         day = s["TIPO_DIA"]
         new_value = sorted(result.get(day, []) + schedule_to_array(s["HORAS_SALIDA"]))
-        result[day] = new_value
+        result[day] = sanitize_schedule_times(new_value)
     return build_schedule(result)
 
 
@@ -40,3 +40,18 @@ def build_schedule(result):
     return Schedule(result.get(WORKING_DAY_CODE, []),
                     result.get(SATURDAY_DAY_CODE, []),
                     result.get(SUNDAY_DAY_CODE, []))
+
+
+def sanitize_schedule_times(schedule):
+    """ Some time comes in the wrong format, e.g. 26:11 which this function fixes and replaces by 02:11 """
+    for i in range(len(schedule)):
+        schedule[i] = schedule[i].replace("24:", "00:"). \
+            replace("25:", "01:"). \
+            replace("26:", "02:"). \
+            replace("27:", "03:"). \
+            replace("28:", "04:"). \
+            replace("29:", "05:"). \
+            replace("30:", "06:"). \
+            replace("31:", "07:"). \
+            replace("32:", "08:")
+    return schedule
