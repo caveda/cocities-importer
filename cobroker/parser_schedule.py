@@ -24,7 +24,7 @@ def digest_json_schedules(json_schedules):
     for s in json_schedules:
         day = s["TIPO_DIA"]
         new_value = sorted(result.get(day, []) + schedule_to_array(s["HORAS_SALIDA"]))
-        result[day] = sanitize_schedule_times(new_value)
+        result[day] = new_value
     return build_schedule(result)
 
 
@@ -37,9 +37,9 @@ def schedule_to_array(schedule):
 
 def build_schedule(result):
     """ Builds a Schedule object out of a dictionary """
-    return Schedule(result.get(WORKING_DAY_CODE, []),
-                    result.get(SATURDAY_DAY_CODE, []),
-                    result.get(SUNDAY_DAY_CODE, []))
+    return Schedule(sanitize_schedule_times(result.get(WORKING_DAY_CODE, [])),
+                    sanitize_schedule_times(result.get(SATURDAY_DAY_CODE, [])),
+                    sanitize_schedule_times(result.get(SUNDAY_DAY_CODE, [])))
 
 
 def sanitize_schedule_times(schedule):
