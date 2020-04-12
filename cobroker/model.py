@@ -135,8 +135,10 @@ class Stop():
 
     def to_dict(self):
         """ Converts the object into a dictionary used for serializing """
-        result = {'Id': self.id, 'Na': self.name, 'Co': self.connections_to_string(), \
+        result = {'Id': self.id, 'Na': self.name, \
                   'Lc': self.location.to_dict(), 'Sc': self.schedule.to_dict()}
+        if len(self.connections)>0:
+            result['Co'] = self.connections_to_string()
         return result
 
     def __unicode__(self):
@@ -164,7 +166,7 @@ class Location(object):
         return cls(lat, long)
 
     def to_dict(self):
-        return {'La': self.lat, 'Lo': self.long}
+        return {'La': str(self.lat), 'Lo': str(self.long)}
 
 
 def coordinates_to_locations(coordinates):
