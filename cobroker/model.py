@@ -16,7 +16,7 @@ LINE_NAME_SEPARATOR = '-'
 WORKING_DAY_CODE = "1"
 SATURDAY_DAY_CODE = "2"
 SUNDAY_DAY_CODE = "3"
-
+SPECIAL_LINES_NUMBER_DICTIONARY = {"A1": 21, "A2": 2, "A3": 23, "A4": 24, "A5": 25, "A6": 6, "A7": 99, "A8": 8, "A9": 9, "G1": 91, "G2": 92, "G3": 93, "G4": 94, "G5": 95, "G6": 96, "G7": 97, "G8": 98}
 
 class Line():
     """ Entity representing a transport Line """
@@ -82,6 +82,13 @@ class Line():
     def is_night_line(self):
         return re.match("([Gg])\\d", self.id) is not None
 
+    def get_line_number(self):
+        if self.id.isdigit():
+            return int(self.id)
+        if self.id in SPECIAL_LINES_NUMBER_DICTIONARY:
+            return SPECIAL_LINES_NUMBER_DICTIONARY[self.id]
+        return -1
+
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name and self.direction == other.direction
 
@@ -90,10 +97,9 @@ class Line():
 
     def to_dict(self):
         """ Converts the object into a dictionary used for serializing """
-        result = {'Id': self.get_client_line_id(), 'AgencyId': self.id, 'Name': self.name.upper(),
-                  'Dir': self.direction, 'Night': self.is_night_line(),
-                  'Stops': [s.to_dict() for s in self.stops],
-                  'Map': [l.to_dict() for l in self.route]}
+        result = {'Id': self.get_client_line_id(), 'AgencyId': self.id, 'Number': self.get_line_number(), \
+                  'Name': self.name.upper(), 'Dir': self.direction, 'Stops': [s.to_dict() for s in self.stops], \
+                  'Map': [l.to_dict() for l in self.route], 'Night': self.is_night_line()}
         return result
 
 
@@ -136,7 +142,7 @@ class Stop():
     def to_dict(self):
         """ Converts the object into a dictionary used for serializing """
         result = {'Id': self.id, 'Na': self.name, \
-                  'Lc': self.location.to_dict(), 'Sc': self.schedule.to_dict()}
+                  'Sc': self.schedule.to_dict(), 'Lc': self.location.to_dict()}
         if len(self.connections)>0:
             result['Co'] = self.connections_to_string()
         return result
