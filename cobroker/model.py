@@ -166,6 +166,16 @@ class Location(object):
         return math.isclose(self.lat, other.lat, abs_tol=0.0001) and \
                math.isclose(self.long, other.long, abs_tol=0.0001)
 
+    # These fields will be useful for sorting the stops of the line.
+    # They will store int values of the point, e.g. given this location [507016.14792745, 4789988.9869907]
+    # raw_x will be equal to 507016 and raw_y equal to 4789988
+    raw_x = 0
+    raw_y = 0
+
+    def set_raw_coordinates_simplified(self, x, y):
+        self.raw_x = x
+        self.raw_y = y
+
     @classmethod
     def from_coordinates(cls, x, y):
         long, lat = transform(Proj(init=EPSG_IN), Proj(init=EPSG_OUT), x, y)
@@ -182,5 +192,19 @@ def coordinates_to_locations(coordinates):
     length = len(lats)
     result = []
     for i in range(length):
-        result.append(Location(lats[i], longs[i]))
+        loc = Location(lats[i], longs[i])
+        raw_location = extract_raw_simple_coordinates(coordinates[i])
+        loc.set_raw_coordinates_simplified(raw_location[0],raw_location[1])
+        result.append(loc)
+
     return result
+
+
+def extract_raw_simple_coordinates (raw_location):
+    """Given ('503846.58851256', '4791736.67290404') returns (503846, 4791736)"""
+    pattern = re.compile('(\d+).(\d+)?')
+    x_result = pattern.match(raw_location[0])
+    y_result = pattern.match(raw_location[1])
+    return int(x_result[1]), int(y_result[1])
+
+
