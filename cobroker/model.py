@@ -89,6 +89,18 @@ class Line():
             return SPECIAL_LINES_NUMBER_DICTIONARY[self.id]
         return -1
 
+    def sort_stops_by_route (self, route):
+        sorted_stops = []
+        for c in route:
+            for s in self.stops:
+                if s.location.raw_x == c.raw_x and s.location.raw_y == c.raw_y and s not in sorted_stops:
+                    sorted_stops.append(s)
+                    break
+            if len(sorted_stops) == len(self.stops):
+                break
+        # assert len(sorted_stops) == len(self.stops), 'Error sorting stops by route. Route does not include all stops'
+        self.stops = sorted_stops
+
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name and self.direction == other.direction
 
@@ -203,8 +215,8 @@ def coordinates_to_locations(coordinates):
 def extract_raw_simple_coordinates (raw_location):
     """Given ('503846.58851256', '4791736.67290404') returns (503846, 4791736)"""
     pattern = re.compile('(\d+).(\d+)?')
-    x_result = pattern.match(raw_location[0])
-    y_result = pattern.match(raw_location[1])
+    x_result = pattern.match(str(raw_location[0]))
+    y_result = pattern.match(str(raw_location[1]))
     return int(x_result[1]), int(y_result[1])
 
 
