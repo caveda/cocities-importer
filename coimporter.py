@@ -43,11 +43,11 @@ def fetch_transport_data():
         log(f"Fetching data of line {l.get_line_request_unique_code()}")
         log("  Collecting stops")
         l.set_stops(core.get_line_stops(l))
-        log("  Setting route as stops points")
-        l.set_route(core.get_stops_points(l)) # TODO: get_line_route increases file size to 1.2MB compressed. Need to run load tests.
         log("  Sorting stops by route")
         r = core.get_line_route(l)
         l.sort_stops_by_route(r)
+        log("  Setting route as stops points")
+        l.set_route(core.get_stops_points(l)) # TODO: get_line_route increases file size to 1.2MB compressed. Need to run load tests.
         log("  Gathering stops connections")
         update_connections_with_line(stops_connections, l)
         log("  Adding static schedule")

@@ -131,12 +131,13 @@ dmypy.json
 # IDE
 .idea
 
-# os
+# os + outputs
 .DS_Store
 *.xml
 *.sh
 *.json
 *.zip
+*.dat
 
 # pipEnv
 Pipfile
