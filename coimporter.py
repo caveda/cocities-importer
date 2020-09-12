@@ -43,7 +43,7 @@ def fetch_transport_data():
         log(f"Fetching data of line {l.get_line_request_unique_code()}")
         log("  Collecting stops")
         l.set_stops(core.get_line_stops(l))
-        log("  Sorting stops by route")
+        log(f"  Sorting {len(l.stops)} stops by route")
         r = core.get_line_route(l)
         l.sort_stops_by_route(r)
         log("  Setting route as stops points")

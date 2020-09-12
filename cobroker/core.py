@@ -38,7 +38,7 @@ def get_line_route(l):
     try:
         query = cocities.get_request_line_route_map(l.get_line_request_unique_code())
         req = send_http_request(query)
-        route = parse_route(req.text)
+        route = parse_route(l, req.text)
     except Exception as ex:
         # Route sometimes does not return anything. Return locations of stops as route.
         cologger.log(f"Exception captured fetching route of {l.get_client_line_id()}: {ex}")

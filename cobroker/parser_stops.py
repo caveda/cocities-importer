@@ -1,5 +1,5 @@
 from xml.dom import minidom
-from cobroker.model import Stop, Location, coordinates_to_locations
+from cobroker.model import Stop, Location, coordinates_to_locations, LINE_RETURN_DIRECTION
 import re
 
 
@@ -42,8 +42,9 @@ def add_stop_without_duplicates(result, s, stop_id):
 
 def stop_belongs_line(line, stop_line_name):
     if len(line.get_destination_name()) > 1:
-        pattern = f"^(Fin de Semana)(.+)\\({line.get_destination_name()}\\) y Retiradas" if line.id == "76" \
-            else f"^{line.get_destination_name()}?|(semana|laborables|especial)(.+)\\({line.get_destination_name()}\\)"
+        destination = line.get_destination_name()
+        pattern = f"^(fin de semana)(.+)\\({destination}\\)(.*)" if line.id == "76" \
+            else f"^{destination}?|(semana|laborables|especial)(.+)\\({destination}\\)"
         return re.search(pattern, stop_line_name, re.IGNORECASE) is not None
     else:
         return True
