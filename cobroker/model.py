@@ -89,7 +89,7 @@ class Line():
             return SPECIAL_LINES_NUMBER_DICTIONARY[self.id]
         return -1
 
-    def sort_stops_by_route (self, route):
+    def sort_stops_by_route(self, route):
         sorted_stops = []
         for c in route:
             for s in self.stops:
@@ -98,8 +98,16 @@ class Line():
                     break
             if len(sorted_stops) == len(self.stops):
                 break
-        # assert len(sorted_stops) == len(self.stops), 'Error sorting stops by route. Route does not include all stops'
         self.stops = sorted_stops
+
+    def check_route_include_all_stops(self, route):
+        found = 0
+        for s in self.stops:
+            for c in route:
+                if s.location.raw_x == c.raw_x and s.location.raw_y == c.raw_y:
+                    found += 1
+                    break
+        return len(self.stops) == found
 
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name and self.direction == other.direction

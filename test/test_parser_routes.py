@@ -1,6 +1,6 @@
 import unittest
 
-from cobroker.model import Line, LINE_FORWARD_DIRECTION, Location
+from cobroker.model import Line, LINE_FORWARD_DIRECTION, Location, Stop
 from cobroker.parser_routes import parse_route
 
 TEST_JSON_RESPONSE = """{
@@ -14,22 +14,19 @@ TEST_JSON_RESPONSE = """{
                 "coordinates": [
                     [
                         [
-                            506010.81625759,
-                            4790061.66481957
+                            506233.065172259,
+                            4790795.30995913
                         ],
                         [
-                            506007.93349353,
-                            4790055.20073894
-                        ],
-                        [
-                            506006.65353876,
-                            4790054.01883834
+                            505959.0574198989,
+                            4790065.031728711
                         ]
                     ]
                 ]
             }
         }
-    ]
+    ],
+    "totalFeatures": 1
 }"""
 
 
@@ -39,12 +36,18 @@ class TestParserRoutes(unittest.TestCase):
     def test_parse_routes_validJSON_returnedExpectedRoute(self):
         # Given
         input_json = TEST_JSON_RESPONSE
+        expected_route = [Location.from_coordinates(506233.065172259, 4790795.30995913),
+                          Location.from_coordinates(505959.0574198989, 4790065.031728711)]
+        line = Line(66, "PLACE1 - Place2", LINE_FORWARD_DIRECTION)
+        location1001 = Location.from_coordinates(506233.065172259, 4790795.30995913)
+        location1001.set_raw_coordinates_simplified(506233, 4790795)
+        location1002 = Location.from_coordinates(505959.0574198989, 4790065.031728711)
+        location1002.set_raw_coordinates_simplified(505959, 4790065)
+        line.stops = [Stop("1001", "Stop name 1", location1001),
+                      Stop("1002", "Stop name 2", location1002)]
         # When
-        route = parse_route(input_json)
+        route = parse_route(line, input_json)
         # Then
-        expected_route = [Location.from_coordinates(506010.81625759,4790061.66481957),
-                          Location.from_coordinates(506007.93349353, 4790055.20073894),
-                          Location.from_coordinates(506006.65353876, 4790054.01883834)]
         self.assertListEqual(route, expected_route)
 
 
